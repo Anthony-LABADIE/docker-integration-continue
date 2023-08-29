@@ -1,18 +1,18 @@
 name: jest-and-docker-ci
 
-on: push
+on: pull_request
 
 jobs:
   test-front:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Goto client and run tests
         run: cd client && npm i && npm test
   docker:
     needs: test-front
-    if: github.ref == 'refs/heads/main'
+    if: github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -22,11 +22,11 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.ANTHONYLABADIE }}
-          password: ${{ secrets.dckr_pat_syfR6B4b1CtsROaK4B9EaUryrdE }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
           context: "{{defaultContext}}:client"
-          tags: ${{ secrets.anthonylabadie }}/docker-integration-continue:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-integration-continue:latest
