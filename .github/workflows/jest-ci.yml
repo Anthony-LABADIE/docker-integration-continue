@@ -29,4 +29,4 @@ jobs:
         with:
           push: true
           context: "{{defaultContext}}:client"
-          tags: ${{ secrets.anthonylabadie }}/quete1902:latest
+          tags: ${{ secrets.anthonylabadie }}/docker-integration-continue:latest
